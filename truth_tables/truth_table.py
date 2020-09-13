@@ -41,5 +41,5 @@ class TruthTable:
         return self.vars == other.vars and self.table == other.table
 
 
-def tt(*props):
-    TruthTable(*props).display()
+def tt(*props, binary=True):
+    TruthTable(*props).display(binary)
