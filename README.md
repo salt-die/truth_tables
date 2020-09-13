@@ -27,6 +27,20 @@ BinOp(op='and')
  ├─Const(value=True)
  ╰─UnOp(op='~')
     ╰─Const(value=True)
+>>> my_table = TruthTable('~((p xor (q and ~r) or q) and ~(p <-> r))')
+>>> my_table.display(binary=True)
+┌───┬───┬───┬───────────────────────────────────────────┐
+│ p │ q │ r │ ~((p xor (q and ~r) or q) and ~(p <-> r)) │
+├───┼───┼───┼───────────────────────────────────────────┤
+│ 0 │ 0 │ 0 │                     1                     │
+│ 0 │ 0 │ 1 │                     1                     │
+│ 0 │ 1 │ 0 │                     1                     │
+│ 0 │ 1 │ 1 │                     0                     │
+│ 1 │ 0 │ 0 │                     0                     │
+│ 1 │ 0 │ 1 │                     1                     │
+│ 1 │ 1 │ 0 │                     0                     │
+│ 1 │ 1 │ 1 │                     1                     │
+└───┴───┴───┴───────────────────────────────────────────┘
 ```
 
 Also included is the function `tt(*props)` which is just short for `TruthTable(*props).display()`:
