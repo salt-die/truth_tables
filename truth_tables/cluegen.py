@@ -15,7 +15,11 @@
 # greater good.
 
 # Modified for use with truth tables - salt-die
+# We've removed the need to use annotations at all when cluegen'n a class by passing a defaultdict-like object in
+# DatumMeta's __prepare__ method.
+from collections import defaultdict
 from types import MemberDescriptorType as MemberDescriptor
+from .utils import LRU
 
 # Collect all type clues from a class and base classes.
 def all_clues(cls):
@@ -43,6 +47,36 @@ def cluegen(func):
     return type(f'ClueGen_{func.__name__}', (), dict(__get__=__get__, __set_name__=__set_name__))()
 
 
+class AnnDefaultDict(dict):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self['__annotations__'] = {}
+
+    def __missing__(self, key):
+        if key.startswith('__') or key == 'cluegen':
+            raise KeyError(key)
+        self['__annotations__'][key] = None
+
+
+class DatumMeta(type):
+    def __prepare__(*args):
+        return AnnDefaultDict()
+
+
+class CachedDatum(DatumMeta):
+    """Memoize instances of CachedDatum type"""
+    _instances = defaultdict(LRU)
+
+    def __call__(cls, *args, **kwargs):
+        lookup = *args, *sorted(kwargs.items())
+        cls_dict = CachedDatum._instances[cls]
+
+        if lookup not in cls_dict:
+            cls_dict[lookup] = super(CachedDatum, cls).__call__(*args, **kwargs)
+
+        return cls_dict[lookup]
+
+
 # Base class for defining data structures
 class DatumBase:
     __slots__ = ()
@@ -61,7 +95,8 @@ class DatumBase:
         if submethods != cls._methods:
             cls._methods = submethods
 
-class Datum(DatumBase):
+
+class Datum(DatumBase, metaclass=DatumMeta):
     __slots__ = ()
 
     @cluegen

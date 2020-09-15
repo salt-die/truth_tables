@@ -1,8 +1,8 @@
 
 from types import FunctionType
 from typing import Literal
-from .cluegen import Datum
-from .utils import CachedType, prefix
+from .cluegen import Datum, CachedDatum
+from .utils import prefix
 
 
 class Expr(Datum):
@@ -10,13 +10,12 @@ class Expr(Datum):
 
 
 class Op(Expr):
-    op: str
-    func: FunctionType
+    op, func
 
 
 class UnOp(Op):
     """Unary Operator"""
-    expr: Expr
+    expr
 
     def __str__(self):
         first, *body = str(self.expr).splitlines()
@@ -34,12 +33,11 @@ class UnOp(Op):
 
 class BinOp(Op):
     """Binary Operator"""
-    l: Expr
-    r: Expr
+    left, right
 
     def __str__(self):
-        first, *left_body = str(self.l).splitlines()
-        second, *right_body = str(self.r).splitlines()
+        first, *left_body = str(self.left).splitlines()
+        second, *right_body = str(self.right).splitlines()
         return '\n'.join(
             (
                 f"{type(self).__name__}(op='{self.op}')",
@@ -52,18 +50,18 @@ class BinOp(Op):
 
 
     def __call__(self, **var_values):
-        return self.func(self.l(**var_values), self.r(**var_values))
+        return self.func(self.left(**var_values), self.right(**var_values))
 
 
-class Var(Expr, metaclass=CachedType):
-    name: str
+class Var(Expr, metaclass=CachedDatum):
+    name
 
     def __call__(self, **var_values):
         return var_values[self.name]
 
 
-class Const(Expr, metaclass=CachedType):
-    value: Literal
+class Const(Expr, metaclass=CachedDatum):
+    value
 
     def __call__(self, **var_values):
         return self.value

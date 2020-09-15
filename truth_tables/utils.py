@@ -1,4 +1,4 @@
-from collections import defaultdict, OrderedDict
+from collections import OrderedDict
 
 def prefix(body, prefix='   '):
     for line in body:
@@ -21,17 +21,3 @@ class LRU(OrderedDict):
         super().__setitem__(key, value)
         if len(self) > self.maxsize:
             self.popitem(last=False)
-
-
-class CachedType(type):
-    """Memoize instances of CachedType"""
-    _instances = defaultdict(LRU)
-
-    def __call__(cls, *args, **kwargs):
-        lookup = *args, *sorted(kwargs.items())
-        cls_dict = CachedType._instances[cls]
-
-        if lookup not in cls_dict:
-            cls_dict[lookup] = super(CachedType, cls).__call__(*args, **kwargs)
-
-        return cls_dict[lookup]
