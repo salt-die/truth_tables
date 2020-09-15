@@ -14,7 +14,6 @@ class Op(Expr):
 
 
 class UnOp(Op):
-    """Unary Operator"""
     expr
 
     def __str__(self):
@@ -32,7 +31,6 @@ class UnOp(Op):
 
 
 class BinOp(Op):
-    """Binary Operator"""
     left, right
 
     def __str__(self):
