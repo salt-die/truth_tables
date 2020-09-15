@@ -1,39 +1,19 @@
-from collections import defaultdict
-from dataclasses import dataclass, field
+
 from types import FunctionType
 from typing import Literal
+from .cluegen import Datum
+from .utils import CachedType, prefix
 
 
-def prefix(body, prefix='   '):
-    for line in body:
-        yield prefix + line
-
-
-class CachedType(type):
-    """Memoize instances of CachedType"""
-    _instances = defaultdict(dict)
-
-    def __call__(cls, *args, **kwargs):
-        lookup = *args, *sorted(kwargs.items())
-        cls_dict = CachedType._instances[cls]
-
-        if lookup not in cls_dict:
-            cls_dict[lookup] = super(CachedType, cls).__call__(*args, **kwargs)
-
-        return cls_dict[lookup]
-
-
-class Expr:
+class Expr(Datum):
     pass
 
 
-@dataclass
 class Op(Expr):
     op: str
-    func: FunctionType = field(repr=False)
+    func: FunctionType
 
 
-@dataclass
 class UnOp(Op):
     """Unary Operator"""
     expr: Expr
@@ -52,7 +32,6 @@ class UnOp(Op):
         return self.func(self.expr(**var_values))
 
 
-@dataclass
 class BinOp(Op):
     """Binary Operator"""
     l: Expr
@@ -76,7 +55,6 @@ class BinOp(Op):
         return self.func(self.l(**var_values), self.r(**var_values))
 
 
-@dataclass
 class Var(Expr, metaclass=CachedType):
     name: str
 
@@ -84,7 +62,6 @@ class Var(Expr, metaclass=CachedType):
         return var_values[self.name]
 
 
-@dataclass
 class Const(Expr, metaclass=CachedType):
     value: Literal
 
