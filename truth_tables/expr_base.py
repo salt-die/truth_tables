@@ -1,6 +1,3 @@
-
-from types import FunctionType
-from typing import Literal
 from .cluegen import Datum, CachedDatum
 from .utils import prefix
 
