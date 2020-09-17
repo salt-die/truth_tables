@@ -1,16 +1,12 @@
 BOX_CHARS = '┌┬┐', '├┼┤', '└┴┘'
 HORIZONTAL = '─'
 
-def table_maker(expressions, *values):
+def table_maker(expressions, *rows):
     """Generates an aligned table. Modified from https://github.com/salt-die/Table-Maker"""
     lengths = tuple(map(len, expressions))
-    rows = list(values)
 
     # Pad the length of items in each column
-    for i, row in enumerate(rows):
-        for j, (item, length) in enumerate(zip(row, lengths)):
-            rows[i][j] = f'{item:^{length}}'
-
+    rows = [[f'{item:^{length}}' for item, length in zip(row, lengths)] for row in rows]
     rows.insert(0, list(expressions))
 
     # Make separators

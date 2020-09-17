@@ -24,7 +24,7 @@ class TruthTable:
 
     def display(self, binary=False):
         translate = '01' if binary else 'FT'
-        values = ([translate[i] for i in row] for row in self.table)
+        values = ((translate[i] for i in row) for row in self.table)
         table = table_maker(self.vars + self.props, *values)
         print(table)
 
@@ -35,7 +35,7 @@ class TruthTable:
         return iter(self.props)
 
     def __repr__(self):
-        return f'{type(self).__name__}({str(self.props)[1:-1]})'
+        return f'{type(self).__name__}({str(self.props)[1:-2]})'
 
     def __eq__(self, other):
         return self.vars == other.vars and self.table == other.table
