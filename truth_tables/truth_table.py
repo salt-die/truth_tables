@@ -11,9 +11,9 @@ class TruthTable:
     def __init__(self, *props):
         self.props = props
 
-        PARSER.vars = set()
         self.exprs = exprs = tuple(PARSER.parse(LEXER.tokenize(prop)) for prop in self.props)
         self.vars = vars_ = tuple(sorted(PARSER.vars))
+        PARSER.vars = set()
 
         table = []
         for values in product((False, True), repeat=len(vars_)):
