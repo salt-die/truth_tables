@@ -28,7 +28,7 @@ class qMeta(type):
 
 
 class qCached(qMeta):
-    """Memoize instances of qDatum type"""
+    """Memoize instances of qCached type"""
     _instances = defaultdict(LRU)
 
     def __call__(cls, *args, **kwargs):
