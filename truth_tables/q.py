@@ -13,7 +13,7 @@ from .utils import LRU
 class AutoDict(dict):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        super().__setitem__('__auto_attrs__', [])
+        self['__auto_attrs__'] = []
 
     def __missing__(self, key):
         if key.startswith('__'):
