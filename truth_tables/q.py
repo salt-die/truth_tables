@@ -10,9 +10,6 @@ from collections import defaultdict
 from .utils import LRU
 
 
-NO_DEFAULT = object()
-
-
 class AutoDict(dict):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
