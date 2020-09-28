@@ -29,16 +29,15 @@ class qMeta(type):
 
 class qCached(qMeta):
     """Memoize instances of qCached type"""
-    _instances = defaultdict(LRU)
+    _class_to_cache = defaultdict(LRU)
 
-    def __call__(cls, *args, **kwargs):
-        lookup = *args, *sorted(kwargs.items())
-        cls_dict = qCached._instances[cls]
+    def __call__(cls, arg):
+        cache = qCached._class_to_cache[cls]
 
-        if lookup not in cls_dict:
-            cls_dict[lookup] = super().__call__(*args, **kwargs)
+        if arg not in cache:
+            cache[arg] = super().__call__(arg)
 
-        return cls_dict[lookup]
+        return cache[arg]
 
 
 class q(metaclass=qMeta):
