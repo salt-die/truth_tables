@@ -1,8 +1,8 @@
-from .cluegen import Datum, CachedDatum
+from .q import q, qCached
 from .utils import prefix
 
 
-class Expr(Datum):
+class Expr(q):
     pass
 
 
@@ -48,14 +48,14 @@ class BinOp(Op):
         return self.func(self.left(**var_values), self.right(**var_values))
 
 
-class Var(Expr, metaclass=CachedDatum):
+class Var(Expr, metaclass=qCached):
     name
 
     def __call__(self, **var_values):
         return var_values[self.name]
 
 
-class Const(Expr, metaclass=CachedDatum):
+class Const(Expr, metaclass=qCached):
     value
 
     def __call__(self, **var_values):
