@@ -50,7 +50,7 @@ class q(metaclass=qMeta):
         init_body = '\n'.join(f'    self.{name}={name}' for name in attrs) if attrs else '    pass'
 
         repr_header = 'def __repr__(self):\n'
-        repr_body = '    return f"{{type(self).__name__}}({})"'.format(', '.join(f'{name}={{self.{name}}}' for name in attrs if name != 'func'))
+        repr_body = '    return f"{{type(self).__name__}}({})"'.format(', '.join(f'{name}={{self.{name}!r}}' for name in attrs if name != 'func'))
 
         loc = {}
         exec(init_header + init_body, loc)
