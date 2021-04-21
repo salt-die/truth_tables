@@ -26,6 +26,18 @@ class qMeta(type):
     def __prepare__(name, bases):
         return AutoDict()
 
+    def __new__(meta, name, bases, methods):
+        if attrs := methods.pop('__auto_attrs__'):
+            init_header = f'def __init__(self, { ", ".join(attrs)}):\n'
+            init_body = '\n'.join(f'    self.{name}={name}' for name in attrs)
+            exec(init_header + init_body, methods)
+
+        repr_header = 'def __repr__(self):\n'
+        repr_body = '    return f"{{type(self).__name__}}({})"'.format(', '.join(f'{name}={{self.{name}!r}}' for name in attrs))
+        exec(repr_header + repr_body, methods)
+
+        return super().__new__(meta, name, bases, methods)
+
 
 class qCached(qMeta):
     """Memoize instances of qCached type"""
@@ -41,19 +53,4 @@ class qCached(qMeta):
 
 
 class q(metaclass=qMeta):
-    def __init_subclass__(cls):
-        attrs = [attr for c in reversed(cls.__mro__) for attr in getattr(c, '__auto_attrs__', [])]
-
-        args = (', ' if attrs else '') + ', '.join(attrs)
-
-        init_header = f'def __init__(self{args}):\n'
-        init_body = '\n'.join(f'    self.{name}={name}' for name in attrs) if attrs else '    pass'
-
-        repr_header = 'def __repr__(self):\n'
-        repr_body = '    return f"{{type(self).__name__}}({})"'.format(', '.join(f'{name}={{self.{name}!r}}' for name in attrs if name != 'func'))
-
-        loc = {}
-        exec(init_header + init_body, loc)
-        exec(repr_header + repr_body, loc)
-        cls.__init__ = loc['__init__']
-        cls.__repr__ = loc['__repr__']
+    pass
