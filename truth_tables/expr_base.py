@@ -1,5 +1,10 @@
-from .q import q, qCached
-from .utils import prefix
+from .q import q
+
+def prefix(body, prefix):
+    """Yields each line of `body` prefixed with `prefix`.
+    """
+    for line in body:
+        yield prefix + line
 
 
 class Expr(q):
@@ -47,14 +52,14 @@ class BinOp(Op):
         return type(self).op(self.left(**var_values), self.right(**var_values))
 
 
-class Var(Expr, metaclass=qCached):
+class Var(Expr):
     name
 
     def __call__(self, **var_values):
         return var_values[self.name]
 
 
-class Const(Expr, metaclass=qCached):
+class Const(Expr):
     value
 
     def __call__(self, **var_values):

@@ -6,10 +6,6 @@ class Point(q):
 
 This is all you need to get the __init__ and __repr__ one expects.
 """
-from collections import defaultdict
-from .utils import LRU
-
-
 class AutoDict(dict):
     def __init__(self):
         super().__init__(__fields__={})  # Using a dict as an ordered-set
@@ -42,20 +38,6 @@ class qMeta(type):
         exec(repr_header + repr_body, methods)
 
         return super().__new__(meta, name, bases, methods)
-
-
-class qCached(qMeta):
-    """Memoize instances of qCached type.
-    """
-    _class_to_cache = defaultdict(LRU)
-
-    def __call__(cls, arg):
-        cache = qCached._class_to_cache[cls]
-
-        if arg not in cache:
-            cache[arg] = super().__call__(arg)
-
-        return cache[arg]
 
 
 class q(metaclass=qMeta):
