@@ -1,7 +1,7 @@
 from string import whitespace
 from sly import Lexer, Parser
 from .expr_base import Var
-from .logic_expr import *
+from .logic_expr import TRUE, FALSE, Negate, And, Or, Iff, Implies, Xor
 
 
 class LogicLexer(Lexer):
