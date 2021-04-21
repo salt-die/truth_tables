@@ -34,7 +34,7 @@ class TruthTable:
 
     @property
     def ast(self):
-        """Returns the abstract syntax tree of the propositions as a pretty string.
+        """Returns the abstract syntax tree of each proposition as a pretty string.
         """
         return '\n\n'.join(map(str, self.exprs))
 
