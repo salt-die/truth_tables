@@ -12,13 +12,13 @@ from .utils import LRU
 
 class AutoDict(dict):
     def __init__(self):
-        super().__init__(__auto_attrs__=[])
+        super().__init__(__fields__={})  # Using a dict as an ordered-set
 
     def __missing__(self, key):
         if key.startswith('__'):
             raise KeyError(key)
 
-        self['__auto_attrs__'].append(key)
+        self['__fields__'][key] = None
 
 
 class qMeta(type):
@@ -26,13 +26,19 @@ class qMeta(type):
         return AutoDict()
 
     def __new__(meta, name, bases, methods):
-        if attrs := methods.pop('__auto_attrs__'):
+        attrs = {}
+        for base in bases:
+            attrs |= getattr(base, '__fields__', {})
+        attrs |= methods['__fields__']
+
+        if attrs:
             init_header = f'def __init__(self, { ", ".join(attrs)}):\n'
-            init_body = '\n'.join(f'    self.{name}={name}' for name in attrs)
+            init_body = '\n'.join(f'    self.{attr}={attr}' for attr in attrs)
             exec(init_header + init_body, methods)
 
         repr_header = 'def __repr__(self):\n'
-        repr_body = '    return f"{{type(self).__name__}}({})"'.format(', '.join(f'{name}={{self.{name}!r}}' for name in attrs))
+        args = ', '.join(f'{{self.{attr}!r}}' for attr in attrs)
+        repr_body = f'    return f"{name}({args})"'
         exec(repr_header + repr_body, methods)
 
         return super().__new__(meta, name, bases, methods)
