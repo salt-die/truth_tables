@@ -2,7 +2,7 @@ BOX_CHARS = '┌┬┐', '├┼┤', '└┴┘'
 HORIZONTAL = '─'
 
 def table_maker(expressions, *rows):
-    """Generates an aligned table. Modified from https://github.com/salt-die/Table-Maker"""
+    """Generates an aligned table. Modified from https://github.com/salt-die/tables"""
     lengths = tuple(map(len, expressions))
 
     # Pad the length of items in each column
