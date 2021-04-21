@@ -1,1 +1,1 @@
-from .truth_table import TruthTable, tt
+from .truth_table import TruthTable
