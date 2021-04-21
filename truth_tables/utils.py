@@ -1,6 +1,6 @@
 from collections import OrderedDict
 
-def prefix(body, prefix='   '):
+def prefix(body, prefix):
     for line in body:
         yield prefix + line
 
