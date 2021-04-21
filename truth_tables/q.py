@@ -11,9 +11,8 @@ from .utils import LRU
 
 
 class AutoDict(dict):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self['__auto_attrs__'] = []
+    def __init__(self):
+        super().__init__(__auto_attrs__=[])
 
     def __missing__(self, key):
         if key.startswith('__'):
@@ -40,7 +39,8 @@ class qMeta(type):
 
 
 class qCached(qMeta):
-    """Memoize instances of qCached type"""
+    """Memoize instances of qCached type.
+    """
     _class_to_cache = defaultdict(LRU)
 
     def __call__(cls, arg):
