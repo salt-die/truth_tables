@@ -7,7 +7,7 @@ class Expr(q):
 
 
 class Op(Expr):
-    op, func
+    op = lambda: None
 
 
 class UnOp(Op):
@@ -17,14 +17,14 @@ class UnOp(Op):
         first, *body = str(self.expr).splitlines()
         return '\n'.join(
             (
-                f"{type(self).__name__}(op='{self.op}')",
-                f' ╰─{first}',
-                *prefix(body),
+                f"{type(self).__name__}",
+                f'╰─{first}',
+                *prefix(body, '  '),
             )
         )
 
     def __call__(self, **var_values):
-        return self.func(self.expr(**var_values))
+        return type(self).op(self.expr(**var_values))
 
 
 class BinOp(Op):
@@ -35,17 +35,16 @@ class BinOp(Op):
         second, *right_body = str(self.right).splitlines()
         return '\n'.join(
             (
-                f"{type(self).__name__}(op='{self.op}')",
-                f' ├─{first}',
-                *prefix(left_body, ' │ '),
-                f' ╰─{second}',
-                *prefix(right_body),
+                f"{type(self).__name__}",
+                f'├─{first}',
+                *prefix(left_body, '│ '),
+                f'╰─{second}',
+                *prefix(right_body, '  '),
             )
         )
 
-
     def __call__(self, **var_values):
-        return self.func(self.left(**var_values), self.right(**var_values))
+        return type(self).op(self.left(**var_values), self.right(**var_values))
 
 
 class Var(Expr, metaclass=qCached):
