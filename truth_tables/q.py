@@ -1,10 +1,10 @@
-"""`q` for `q`uick class definitions!  In the spirit of cluegen, but with no need of annotations.
+"""
+`q` for `q`uick class definitions!
 
 class Point(q):
     x, y
 
 This is all you need to get the __init__ and __repr__ one expects.
-No support for default values here, for a more complete version check https://github.com/salt-die/Snippets/blob/master/q.py
 """
 from collections import defaultdict
 from .utils import LRU
