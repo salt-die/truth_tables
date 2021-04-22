@@ -21,23 +21,24 @@ class qMeta(type):
     def __prepare__(name, bases):
         return AutoDict()
 
-    def __new__(meta, name, bases, methods):
+    def __new__(meta, name, bases, namespace):
         attrs = {}
         for base in bases:
             attrs |= getattr(base, '__fields__', {})
-        attrs |= methods['__fields__']
+        attrs |= namespace['__fields__']
+        namespace['__fields__'] = attrs
 
         if attrs:
-            init_header = f'def __init__(self, { ", ".join(attrs)}):\n'
+            init_header = f'def __init__(self, {", ".join(attrs)}):\n'
             init_body = '\n'.join(f'    self.{attr}={attr}' for attr in attrs)
-            exec(init_header + init_body, methods)
+            exec(init_header + init_body, namespace)
 
         repr_header = 'def __repr__(self):\n'
         args = ', '.join(f'{{self.{attr}!r}}' for attr in attrs)
         repr_body = f'    return f"{name}({args})"'
-        exec(repr_header + repr_body, methods)
+        exec(repr_header + repr_body, namespace)
 
-        return super().__new__(meta, name, bases, methods)
+        return super().__new__(meta, name, bases, namespace)
 
 
 class q(metaclass=qMeta):
