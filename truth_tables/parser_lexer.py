@@ -5,15 +5,16 @@ from .logic_expr import TRUE, FALSE, Negate, And, Or, Iff, Implies, Xor
 
 
 class LogicLexer(Lexer):
-    tokens = {XOR, OR, IFF, IMPLIES, AND, T, F, NAME}
+    tokens = { NOT, AND, OR, IMPLIES, IFF, XOR, T, F, NAME}
     ignore = whitespace
-    literals = set('~()')
+    literals = { '(', ')' }
 
-    XOR = r'xor'
-    OR = r'or'
-    IFF = r'<->'
-    IMPLIES = r'->'
-    AND = r'and'
+    NOT = r'(not)|\~'
+    AND = r'(and)|\&'
+    OR = r'(or)|\|'
+    IMPLIES = r'(implies)|(then)|(->)'
+    IFF = r'(iff)|(<->)'
+    XOR = r'(xor)|\^'
 
     @_(r'T')
     def T(self, t):
@@ -35,19 +36,11 @@ class LogicParser(Parser):
     tokens = LogicLexer.tokens
 
     precedence = (
-        ('left', XOR, OR, IFF, IMPLIES),
+        ('left', OR, IMPLIES, IFF, XOR),
         ('left', AND),
         ('left', '(', ')'),
-        ('right', '~')
+        ('right', NOT)
     )
-
-    lookup = {
-        'xor': Xor,
-        'or': Or,
-        '<->': Iff,
-        '->': Implies,
-        'and': And
-    }
 
     def __init__(self):
         self.vars = set()
@@ -56,23 +49,33 @@ class LogicParser(Parser):
     def statement(self, p):
         return p.expr
 
-    @_(
-        'expr XOR expr',
-        'expr OR expr',
-        'expr IFF expr',
-        'expr IMPLIES expr',
-        'expr AND expr',
-    )
+    @_('NOT expr')
     def expr(self, p):
-        return self.lookup[p[1]](p.expr0, p.expr1)
+        return Negate(p.expr)
 
     @_('"(" expr ")"')
     def expr(self, p):
         return p.expr
 
-    @_('"~" expr')
+    @_('expr AND expr')
     def expr(self, p):
-        return Negate(p.expr)
+        return And(p.expr0, p.expr1)
+
+    @_('expr OR expr')
+    def expr(self, p):
+        return Or(p.expr0, p.expr1)
+
+    @_('expr IMPLIES expr')
+    def expr(self, p):
+        return Implies(p.expr0, p.expr1)
+
+    @_('expr IFF expr')
+    def expr(self, p):
+        return Iff(p.expr0, p.expr1)
+
+    @_('expr XOR expr')
+    def expr(self, p):
+        return Xor(p.expr0, p.expr1)
 
     @_('T')
     def expr(self, p):
