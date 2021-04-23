@@ -14,19 +14,19 @@ Example usage:
 │ T │ T │   T    │    T    │    F     │
 └───┴───┴────────┴─────────┴──────────┘
 >>> print(my_table.ast)
-BinOp(op='or')
- ├─Var(name='p')
- ╰─Var(name='q')
+Or
+├─Var('p')
+╰─Var('q')
 
-BinOp(op='->')
- ├─UnOp(op='~')
- │  ╰─Var(name='p')
- ╰─Var(name='q')
+Implies
+├─Negate
+│ ╰─Var('p')
+╰─Var('q')
 
-BinOp(op='and')
- ├─Const(value=True)
- ╰─UnOp(op='~')
-    ╰─Const(value=True)
+And
+├─Const(True)
+╰─Negate
+  ╰─Const(True)
 >>> my_table = TruthTable('~((p xor (q and ~r) or q) and ~(p <-> r))', binary=True)
 >>> print(my_table)
 ┌───┬───┬───┬───────────────────────────────────────────┐
