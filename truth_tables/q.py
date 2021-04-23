@@ -5,6 +5,8 @@ class Point(q):
     x, y
 
 This is all you need to get the __init__ and __repr__ one expects.
+
+A simplified version of `https://github.com/salt-die/q`
 """
 class AutoDict(dict):
     def __init__(self):
