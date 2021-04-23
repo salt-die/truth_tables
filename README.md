@@ -48,3 +48,19 @@ Two `TruthTables` are equal if they have the same variables and the same truth v
 >>> TruthTable('p -> q') == TruthTable('~p or q')
 True
 ```
+
+The parser will accept symbolic or english names for boolean operators:
+```
+┌──────────┬──────────┬─────────┬──────────────┐
+│ operator │ symbolic │ english │ alternatives │
+├──────────┼──────────┼─────────┼──────────────┤
+│   Not    │    ~     │   not   │              │
+│   And    │    &     │   and   │              │
+│    Or    │    |     │   or    │              │
+│ Implies  │    ->    │ implies │     then     │
+│   Iff    │   <->    │   iff   │              │
+│   Xor    │    ^     │   xor   │              │
+└──────────┴──────────┴─────────┴──────────────┘
+```
+
+Precedence is `Not`, `()`, `And`, then everything else.
