@@ -47,7 +47,7 @@ And
 └───┴───┴───┴───────────────────────────────────────────┘
 ```
 
-Two `TruthTables` are equal if they have the same variables and the same truth values (not necessarily the same propositions).
+Two truth tables are equal if they have the same variables and the same truth values (not necessarily the same propositions).
 
 ```py
 >>> TruthTable('p -> q') == TruthTable('~p or q')
