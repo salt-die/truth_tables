@@ -49,7 +49,7 @@ class TruthTable:
     -------
     __str__()
         Return the truth table as a pretty-printed table.
-    __eq__()
+    __eq__(other)
         Return whether two truth tables are equal.
     """
 
