@@ -1,6 +1,6 @@
 # truth_tables
 
-Create pretty-printed truth tables and abstract syntax trees from boolean expressions!
+Create pretty-printed truth tables and abstract syntax trees from boolean expressions! Installation is as easy as `pip install truth_tables`.
 
 Example usage:
 
@@ -30,6 +30,7 @@ And
 ├─LiteralTrue
 ╰─Negate
   ╰─LiteralTrue
+
 >>> my_table = TruthTable('~((p xor (q and ~r) or q) and ~(p <-> r))')
 >>> print(my_table)
 ┌───┬───┬───┬───────────────────────────────────────────┐
@@ -53,19 +54,18 @@ Two `TruthTables` are equal if they have the same variables and the same truth v
 True
 ```
 
-The parser will accept symbolic or english names for boolean operators:
+## Notes on the Parser
 
-```text
-┌──────────┬──────────┬─────────┐
-│ operator │ symbolic │ english │
-├──────────┼──────────┼─────────┤
-│   Not    │    ~     │   not   │
-│   And    │    &     │   and   │
-│    Or    │    |     │   or    │
-│ Implies  │    ->    │ implies │
-│   Iff    │   <->    │   iff   │
-│   Xor    │    ^     │   xor   │
-└──────────┴──────────┴─────────┘
-```
+- The parser will accept symbolic or english names for boolean operators:
+  | operator  | symbolic | english   |
+  | :-------: | :------: | :-------: |
+  | `Not`     | `~`      | `not`     |
+  | `And`     | `&`      | `and`     |
+  | `Or`      | `\|`     | `or`      |
+  | `Implies` | `->`     | `implies` |
+  | `Iff`     | `<->`    | `iff`     |
+  | `Xor`     | `^`      | `xor`     |
 
-`And` has greater precedence than `Or`, `Implies`, `Iff`, and `Xor`.
+- `Not` has greater precendence than `And` and `And` has greater precedence than `Or`, `Implies`, `Iff`, and `Xor`.
+- `T` and `F` are parsed as boolean literals.
+- Other than the english operator names and boolean literals, variable names may be any sequence of word characters that don't start with a digit.
