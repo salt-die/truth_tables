@@ -54,7 +54,7 @@ class Negate(Expr):
 
     def __str__(self):
         first, *body = str(self.value).splitlines()
-        return f"Negate\n" f"╰─{first}\n" f"{prefix(body, '  ')}"
+        return f"Negate\n╰─{first}\n{prefix(body, '  ')}"
 
     def eval(self, symbols: dict[str, bool]) -> bool:
         return not self.value.eval(symbols)
