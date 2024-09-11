@@ -32,16 +32,16 @@ class TruthTable:
     Parameters
     ----------
     \*propositions : tuple[str, ...]
-        The propositions for the truth table.
+        The truth table's propositions.
 
     Attributes
     ----------
     propositions : tuple[str, ...]
-        The propositions for the truth table.
+        The truth table's propositions.
     vars : tuple[str, ...]
         A sorted tuple of the variables of all propositions.
     ast : str
-        The abstract syntax tree of the propositions as a pretty-printed string.
+        A string representation of the ast of each proposition.
 
     Methods
     -------
@@ -65,14 +65,14 @@ class TruthTable:
             results = (expr.eval(symbols) for expr in expressions)
             table.append((*values, *results))
 
-        self._table = tuple(table)
+        self._table: tuple[tuple[bool, ...], ...] = tuple(table)
         """The truth table's table of truth values."""
-        self._str = _pretty_printed_table(self.vars + propositions, table)
+        self._str: str = _pretty_printed_table(self.vars + propositions, table)
         """The truth table as a pretty-printed table."""
-        self.propositions = propositions
+        self.propositions: tuple[str, ...] = propositions
         """The truth table's propositions."""
-        self.ast = "\n".join(str(expression) for expression in expressions)
-        """A string representation of the truth table's abstract syntax tree."""
+        self.ast: str = "\n".join(str(expression) for expression in expressions)
+        """A string representation of the ast of each proposition."""
 
     def __repr__(self) -> str:
         """Return a string representation of a TruthTable."""
