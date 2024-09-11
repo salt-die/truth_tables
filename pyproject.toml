@@ -1,0 +1,49 @@
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "truth_tables"
+description = "Create pretty-printed truth tables from boolean expressions!"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "salt-die", email = "salt-die@protonmail.com"}]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = ["lark>=1.2.2"]
+dynamic = ["version"]
+
+[project.urls]
+"repository" = "https://github.com/salt-die/truth_tables"
+
+[tool.setuptools.dynamic]
+version = {attr = "truth_tables.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+exclude = []
+
+[tool.ruff.lint]
+select = [
+    "D",  # pydocstyle
+    "F",  # pyflakes
+    "E",  # pycodestyle - error
+    "W",  # pycodestyle - warning
+    "I",  # isort
+]
+ignore = [
+    "D105",  # undocumented-magic-method
+    "D205",  # blank-line-after-summary -- This rule seems bugged for summaries that need more than one line.
+]
+fixable = ["ALL"]
+
+[tool.ruff.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.pycodestyle]
+max-doc-length=88

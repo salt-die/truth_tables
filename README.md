@@ -1,6 +1,9 @@
-Generate truth tables and abstract syntax trees from boolean expressions!
+# truth_tables
+
+Create pretty-printed truth tables and abstract syntax trees from boolean expressions!
 
 Example usage:
+
 ```py
 >>> from truth_tables import TruthTable
 >>> my_table = TruthTable('p or q', '~p -> q', 'T and ~T')
@@ -15,33 +18,34 @@ Example usage:
 └───┴───┴────────┴─────────┴──────────┘
 >>> print(my_table.ast)
 Or
-├─Var('p')
-╰─Var('q')
+├─Variable('p')
+╰─Variable('q')
 
 Implies
 ├─Negate
-│ ╰─Var('p')
-╰─Var('q')
+│ ╰─Variable('p')
+╰─Variable('q')
 
 And
-├─Const(True)
+├─LiteralTrue
 ╰─Negate
-  ╰─Const(True)
->>> my_table = TruthTable('~((p xor (q and ~r) or q) and ~(p <-> r))', binary=True)
+  ╰─LiteralTrue
+>>> my_table = TruthTable('~((p xor (q and ~r) or q) and ~(p <-> r))')
 >>> print(my_table)
 ┌───┬───┬───┬───────────────────────────────────────────┐
-│ p │ q │ r │ ~((p xor (q and ~r) or q) and ~(p <-> r)) │
+│ p | q | r | ~((p xor (q and ~r) or q) and ~(p <-> r)) │
 ├───┼───┼───┼───────────────────────────────────────────┤
-│ 0 │ 0 │ 0 │                     1                     │
-│ 0 │ 0 │ 1 │                     1                     │
-│ 0 │ 1 │ 0 │                     1                     │
-│ 0 │ 1 │ 1 │                     0                     │
-│ 1 │ 0 │ 0 │                     0                     │
-│ 1 │ 0 │ 1 │                     1                     │
-│ 1 │ 1 │ 0 │                     0                     │
-│ 1 │ 1 │ 1 │                     1                     │
+│ F | F | F |                     T                     │
+│ F | F | T |                     T                     │
+│ F | T | F |                     T                     │
+│ F | T | T |                     F                     │
+│ T | F | F |                     F                     │
+│ T | F | T |                     T                     │
+│ T | T | F |                     F                     │
+│ T | T | T |                     T                     │
 └───┴───┴───┴───────────────────────────────────────────┘
 ```
+
 Two `TruthTables` are equal if they have the same variables and the same truth values (not necessarily the same propositions).
 
 ```py
@@ -50,17 +54,18 @@ True
 ```
 
 The parser will accept symbolic or english names for boolean operators:
-```
-┌──────────┬──────────┬─────────┬──────────────┐
-│ operator │ symbolic │ english │ alternatives │
-├──────────┼──────────┼─────────┼──────────────┤
-│   Not    │    ~     │   not   │              │
-│   And    │    &     │   and   │              │
-│    Or    │    |     │   or    │              │
-│ Implies  │    ->    │ implies │     then     │
-│   Iff    │   <->    │   iff   │              │
-│   Xor    │    ^     │   xor   │              │
-└──────────┴──────────┴─────────┴──────────────┘
+
+```text
+┌──────────┬──────────┬─────────┐
+│ operator │ symbolic │ english │
+├──────────┼──────────┼─────────┤
+│   Not    │    ~     │   not   │
+│   And    │    &     │   and   │
+│    Or    │    |     │   or    │
+│ Implies  │    ->    │ implies │
+│   Iff    │   <->    │   iff   │
+│   Xor    │    ^     │   xor   │
+└──────────┴──────────┴─────────┘
 ```
 
-Precedence is `Not`, `()`, `And`, then everything else.
+`And` has greater precedence than `Or`, `Implies`, `Iff`, and `Xor`.
