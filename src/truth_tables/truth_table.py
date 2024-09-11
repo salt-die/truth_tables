@@ -8,7 +8,9 @@ import lark
 from ._ast import GRAMMAR, AST_Transformer
 
 
-def _pretty_printed_table(expressions: list[str], table: tuple[tuple[str, ...]]) -> str:
+def _pretty_printed_table(
+    expressions: list[str], table: tuple[tuple[bool, ...]]
+) -> str:
     """Return a pretty-printed truth table."""
     widths = [len(expression) for expression in expressions]
     padded_rows = [
